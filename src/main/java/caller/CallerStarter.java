@@ -1,22 +1,3 @@
-/*
- *  Copyright (c) 2020 Temporal Technologies, Inc. All Rights Reserved
- *
- *  Copyright 2012-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- *  Modifications copyright (C) 2017 Uber Technologies, Inc.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"). You may not
- *  use this file except in compliance with the License. A copy of the License is
- *  located at
- *
- *  http://aws.amazon.com/apache2.0
- *
- *  or in the "license" file accompanying this file. This file is distributed on
- *  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- *  express or implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- */
-
 package caller;
 
 import client.ClientOptions;
@@ -27,26 +8,45 @@ import io.temporal.client.WorkflowStub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author krishna
+ */
+
+// Main class to start workflow executions
 public class CallerStarter {
+  // Logger initialization for logging workflow execution details
+
   private static final Logger logger = LoggerFactory.getLogger(CallerStarter.class);
 
   public static void main(String[] args) {
+    // Create workflow client with provided configuration
     WorkflowClient client = ClientOptions.getWorkflowClient(args);
 
+    // Configure workflow options with default task queue
     WorkflowOptions workflowOptions =
         WorkflowOptions.newBuilder().setTaskQueue(CallerWorker.DEFAULT_TASK_QUEUE_NAME).build();
+
+    // Create and execute echo workflow
     EchoCallerWorkflow echoWorkflow =
         client.newWorkflowStub(EchoCallerWorkflow.class, workflowOptions);
-    logger.info("Workflow result: {}", echoWorkflow.echo("Nexus Echo 👋"));
+
+    // Log echo workflow result
+    logger.info("Workflow result: {}", echoWorkflow.echo("Nexus Echo ð"));
+
+    // Log workflow execution details
     logger.info(
         "Started workflow workflowId: {} runId: {}",
         WorkflowStub.fromTyped(echoWorkflow).getExecution().getWorkflowId(),
         WorkflowStub.fromTyped(echoWorkflow).getExecution().getRunId());
 
-
+    // Create and execute hello workflow
     HelloCallerWorkflow helloWorkflow =
         client.newWorkflowStub(HelloCallerWorkflow.class, workflowOptions);
+
+    // Log hello workflow result
     logger.info("Workflow result: {}", helloWorkflow.hello("Nexus", Language.ES));
+    // Log workflow execution details
+
     logger.info(
         "Started workflow workflowId: {} runId: {}",
         WorkflowStub.fromTyped(helloWorkflow).getExecution().getWorkflowId(),

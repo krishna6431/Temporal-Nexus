@@ -1,29 +1,21 @@
-/*
- *  Copyright (c) 2020 Temporal Technologies, Inc. All Rights Reserved
- *
- *  Copyright 2012-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- *  Modifications copyright (C) 2017 Uber Technologies, Inc.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"). You may not
- *  use this file except in compliance with the License. A copy of the License is
- *  located at
- *
- *  http://aws.amazon.com/apache2.0
- *
- *  or in the "license" file accompanying this file. This file is distributed on
- *  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- *  express or implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- */
-
+// Package declaration for the caller components
 package caller;
 
+// Import Temporal workflow interface annotation
 import io.temporal.workflow.WorkflowInterface;
+// Import Temporal workflow method annotation
 import io.temporal.workflow.WorkflowMethod;
 
+/**
+ * @author krishna
+ */
+
+// Annotation to mark this interface as a Temporal workflow interface
 @WorkflowInterface
+// Interface definition for the Echo Caller workflow
 public interface EchoCallerWorkflow {
+  // Annotation to mark this method as the main workflow method
   @WorkflowMethod
+  // Method declaration for echo functionality that takes a message and returns a String
   String echo(String message);
 }

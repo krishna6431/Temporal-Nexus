@@ -1,52 +1,49 @@
-/*
- *  Copyright (c) 2020 Temporal Technologies, Inc. All Rights Reserved
- *
- *  Copyright 2012-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- *  Modifications copyright (C) 2017 Uber Technologies, Inc.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"). You may not
- *  use this file except in compliance with the License. A copy of the License is
- *  located at
- *
- *  http://aws.amazon.com/apache2.0
- *
- *  or in the "license" file accompanying this file. This file is distributed on
- *  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- *  express or implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- */
-
+// Package declaration for the caller components
 package caller;
 
-import constants.Language;
-import dto.HelloInput;
-import dto.HelloOutput;
-import io.temporal.workflow.NexusOperationHandle;
-import io.temporal.workflow.NexusOperationOptions;
-import io.temporal.workflow.NexusServiceOptions;
-import io.temporal.workflow.Workflow;
-import service.NexusDemo;
+// Import required classes and dependencies
+import constants.Language; // Enum for supported languages
+import dto.HelloInput; // DTO for hello input parameters
+import dto.HelloOutput; // DTO for hello operation response
+import io.temporal.workflow.NexusOperationHandle; // Handle for async Nexus operations
+import io.temporal.workflow.NexusOperationOptions; // Options for Nexus operations
+import io.temporal.workflow.NexusServiceOptions; // Options for Nexus service configuration
+import io.temporal.workflow.Workflow; // Core Temporal workflow functionality
+import java.time.Duration; // For handling time durations
+import service.NexusDemo; // Nexus service interface
 
-import java.time.Duration;
-
+// Implementation class for the Hello Caller workflow interface
+/**
+ * @author krishna
+ */
 public class HelloCallerWorkflowImpl implements HelloCallerWorkflow {
+  // Create a Nexus service stub with configured options
   NexusDemo nexusService =
+      // Create new Nexus service stub using Temporal's Workflow class
       Workflow.newNexusServiceStub(
+          // Specify the service interface class
           NexusDemo.class,
+          // Configure Nexus service options
           NexusServiceOptions.newBuilder()
+              // Set operation-specific options
               .setOperationOptions(
+                  // Build operation options with timeout
                   NexusOperationOptions.newBuilder()
+                      // Set maximum time allowed for operation completion (10 seconds)
                       .setScheduleToCloseTimeout(Duration.ofSeconds(10))
                       .build())
               .build());
 
+  // Implementation of the hello method from HelloCallerWorkflow interface
   @Override
   public String hello(String message, Language language) {
+    // Start an asynchronous Nexus operation and get its handle
     NexusOperationHandle<HelloOutput> handle =
-        Workflow.startNexusOperation(
-            nexusService::hello, new HelloInput(message, language));
+        // Start the operation using the nexusService's hello method with input parameters
+        Workflow.startNexusOperation(nexusService::hello, new HelloInput(message, language));
+    // Wait for the operation execution to complete
     handle.getExecution().get();
+    // Return the message from the operation result
     return handle.getResult().get().message();
   }
 }

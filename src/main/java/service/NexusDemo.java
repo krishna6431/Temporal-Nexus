@@ -1,22 +1,30 @@
+// Package declaration for service classes
 package service;
 
-import dto.EchoInput;
-import dto.EchoOutput;
-import dto.HelloInput;
-import dto.HelloOutput;
-import io.nexusrpc.Operation;
-import io.nexusrpc.Service;
+// Import statements for required DTOs and Nexus annotations
+import dto.EchoInput; // DTO for echo operation input
+import dto.EchoOutput; // DTO for echo operation output
+import dto.HelloInput; // DTO for hello operation input
+import dto.HelloOutput; // DTO for hello operation output
+import io.nexusrpc.Operation; // Nexus annotation for marking RPC operations
+import io.nexusrpc.Service; // Nexus annotation for marking service interfaces
 
+// Documentation for class author
 /**
  * @author krishna
  */
-@Service
-public interface NexusDemo {
-    // Defines a hello operation that takes HelloInput and returns HelloOutput
-    @Operation
-    HelloOutput hello(HelloInput input);
 
-    // Defines an echo operation that takes EchoInput and returns EchoOutput
-    @Operation
-    EchoOutput echo(EchoInput input);
+// Marks this interface as a Nexus RPC service
+@Service
+// Interface definition for the Nexus demo service
+public interface NexusDemo {
+  // Marks this method as a Nexus RPC operation
+  @Operation
+  // Method declaration for hello operation with input/output DTOs
+  HelloOutput hello(HelloInput input);
+
+  // Marks this method as a Nexus RPC operation
+  @Operation
+  // Method declaration for echo operation with input/output DTOs
+  EchoOutput echo(EchoInput input);
 }

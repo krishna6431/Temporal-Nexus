@@ -1,45 +1,42 @@
-/*
- *  Copyright (c) 2020 Temporal Technologies, Inc. All Rights Reserved
- *
- *  Copyright 2012-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- *  Modifications copyright (C) 2017 Uber Technologies, Inc.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"). You may not
- *  use this file except in compliance with the License. A copy of the License is
- *  located at
- *
- *  http://aws.amazon.com/apache2.0
- *
- *  or in the "license" file accompanying this file. This file is distributed on
- *  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- *  express or implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- */
-
+// Package declaration for the caller components
 package caller;
 
-import dto.EchoInput;
-import io.temporal.workflow.NexusOperationOptions;
-import io.temporal.workflow.NexusServiceOptions;
-import io.temporal.workflow.Workflow;
-import service.NexusDemo;
+// Import required classes
+import dto.EchoInput; // Data Transfer Object for echo input
+import io.temporal.workflow.NexusOperationOptions; // Options for Nexus operations
+import io.temporal.workflow.NexusServiceOptions; // Options for Nexus service configuration
+import io.temporal.workflow.Workflow; // Core Temporal workflow functionality
+import java.time.Duration; // For handling time durations
+import service.NexusDemo; // Nexus service interface
 
-import java.time.Duration;
+/**
+ * @author krishna
+ */
 
+// Implementation class for the Echo Caller workflow interface
 public class EchoCallerWorkflowImpl implements EchoCallerWorkflow {
+  // Create a Nexus service stub with configured options
   NexusDemo nexusService =
+      // Create new Nexus service stub using Temporal's Workflow class
       Workflow.newNexusServiceStub(
+          // Specify the service interface class
           NexusDemo.class,
+          // Configure Nexus service options
           NexusServiceOptions.newBuilder()
+              // Set operation-specific options
               .setOperationOptions(
+                  // Build operation options with timeout
                   NexusOperationOptions.newBuilder()
+                      // Set maximum time allowed for operation completion (1000 seconds)
                       .setScheduleToCloseTimeout(Duration.ofSeconds(1000))
                       .build())
               .build());
 
+  // Implementation of the echo method from EchoCallerWorkflow interface
   @Override
   public String echo(String message) {
+    // Call the echo method on nexusService, wrap the message in EchoInput, and return the response
+    // message
     return nexusService.echo(new EchoInput(message)).message();
   }
 }

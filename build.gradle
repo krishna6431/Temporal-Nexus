@@ -20,7 +20,8 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-task execute(type: JavaExec) {
-    mainClass = findProperty("mainClass") ?: ""
+
+tasks.register('execute', JavaExec) {
+    mainClass = findProperty("mainClass") ?: "" as Property<String>
     classpath = sourceSets.main.runtimeClasspath
 }
